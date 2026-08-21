@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ORDERHUB — Auto Order Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home"><span class="brand-mark">O</span> ORDERHUB</a>
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <nav id="nav">
+      <a href="#home">HOME</a>
+      <a href="#products">PRODUK</a>
+      <a href="#order">ORDER</a>
+      <button id="adminBtn" class="nav-admin">⚙ ADMIN</button>
+    </nav>
+    <button class="cart-btn" id="cartBtn">🛒 <span id="cartCount">0</span></button>
+  </header>
+
+  <aside class="mobile-menu" id="mobileMenu">
+    <button id="closeMenu">×</button>
+    <a href="#home">HOME</a><a href="#products">PRODUK</a><a href="#order">ORDER</a>
+    <button id="mobileAdminBtn">⚙ ADMIN PANEL</button>
+  </aside>
+
+  <main>
+    <section class="hero" id="home">
+      <div>
+        <span class="kicker">⚡ AUTO ORDER SYSTEM</span>
+        <h1>ORDER<br><mark>SMART.</mark></h1>
+        <p>Web auto order modern. Produk, harga, stok, gambar, dan pesanan dapat dikelola dari Admin Panel.</p>
+        <a href="#products" class="yellow-btn">LIHAT PRODUK →</a>
+      </div>
+      <div class="hero-box">
+        <div class="hero-logo">🛒</div>
+        <span>AUTO ORDER</span>
+        <strong>FAST<br><i>& EASY.</i></strong>
+        <div class="status-card">✓ SYSTEM READY</div>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="section-head">
+        <div><span class="kicker">CATALOG</span><h2>Produk Pilihan</h2></div>
+        <div class="filters" id="filters"></div>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="section order-layout" id="order">
+      <div class="order-copy">
+        <span class="kicker">CHECKOUT</span>
+        <h2>Pesan dengan mudah.</h2>
+        <p>Pilih produk, masukkan data, lalu lanjutkan ke sistem pembayaran yang nanti dapat Anda integrasikan sendiri.</p>
+        <div class="step"><b>01</b> Pilih produk</div>
+        <div class="step"><b>02</b> Isi data pelanggan</div>
+        <div class="step"><b>03</b> Lanjut pembayaran</div>
+      </div>
+      <form class="checkout-card" id="checkoutForm">
+        <h3>DATA PEMESANAN</h3>
+        <label>Nama<input id="customerName" required placeholder="Nama lengkap"></label>
+        <label>WhatsApp<input id="customerPhone" required placeholder="08xxxxxxxxxx"></label>
+        <label>Email<input id="customerEmail" type="email" placeholder="Opsional"></label>
+        <label>Catatan<textarea id="customerNote" placeholder="Catatan pesanan"></textarea></label>
+        <div class="summary">
+          <div><span>Subtotal</span><b id="subtotal">Rp0</b></div>
+          <div><span>Biaya layanan</span><b id="fee">Rp0</b></div>
+          <div class="total"><span>TOTAL</span><b id="total">Rp0</b></div>
+        </div>
+        <button class="yellow-btn full" type="submit">LANJUT PEMBAYARAN →</button>
+        <small>Payment gateway belum aktif — siap dihubungkan dari backend/API.</small>
+      </form>
+    </section>
+  </main>
+
+  <div class="drawer" id="cartDrawer">
+    <div class="drawer-head"><div><span class="kicker">CART</span><h2>Keranjang</h2></div><button id="closeCart">×</button></div>
+    <div id="cartItems"></div>
+    <div class="drawer-foot"><div>TOTAL <b id="drawerTotal">Rp0</b></div><button id="checkoutScroll" class="yellow-btn full">CHECKOUT →</button></div>
+  </div>
+
+  <div class="modal" id="adminModal">
+    <div class="admin-panel">
+      <div class="admin-head">
+        <div><span class="kicker">ADMIN PANEL</span><h2>Kelola Store</h2></div>
+        <button id="closeAdmin">×</button>
+      </div>
+      <div class="admin-tabs">
+        <button class="active" data-tab="dashboard">Dashboard</button>
+        <button data-tab="manage-products">Produk</button>
+        <button data-tab="manage-orders">Pesanan</button>
+        <button data-tab="settings">Settings</button>
+      </div>
+
+      <div class="admin-content">
+        <section class="tab active" id="dashboard">
+          <div class="stats">
+            <article><span>TOTAL PRODUK</span><strong id="statProducts">0</strong></article>
+            <article><span>PESANAN</span><strong id="statOrders">0</strong></article>
+            <article><span>REVENUE DEMO</span><strong id="statRevenue">Rp0</strong></article>
+          </div>
+          <div class="admin-note">Semua data admin pada versi ini disimpan di <b>LocalStorage browser</b>. Untuk produksi, sambungkan ke database/backend.</div>
+        </section>
+
+        <section class="tab" id="manage-products">
+          <div class="admin-section-head"><h3 id="productFormTitle">Tambah Produk</h3><button id="resetProductForm">+ Produk Baru</button></div>
+          <form id="productForm" class="admin-form">
+            <input type="hidden" id="productId">
+            <div class="two"><label>Nama Produk<input id="pName" required></label><label>Harga<input id="pPrice" type="number" required min="0"></label></div>
+            <div class="two"><label>Kategori<input id="pCategory" placeholder="digital / premium / fisik" required></label><label>Stok<input id="pStock" type="number" required min="0"></label></div>
+            <label>Badge<input id="pBadge" placeholder="BEST SELLER"></label>
+            <label>Icon / Emoji<input id="pIcon" placeholder="⚡"></label>
+            <label>URL Gambar (opsional)<input id="pImage" placeholder="https://..."></label>
+            <label>Deskripsi<textarea id="pDesc"></textarea></label>
+            <button class="yellow-btn" type="submit">SIMPAN PRODUK</button>
+          </form>
+          <div class="admin-products" id="adminProducts"></div>
+        </section>
+
+        <section class="tab" id="manage-orders">
+          <div class="admin-section-head"><h3>Pesanan Masuk</h3><button id="clearOrders">Hapus Semua</button></div>
+          <div id="adminOrders"></div>
+        </section>
+
+        <section class="tab" id="settings">
+          <h3>Pengaturan Store</h3>
+          <form id="settingsForm" class="admin-form">
+            <label>Nama Store<input id="storeName" required></label>
+            <label>Biaya Layanan<input id="serviceFeeSetting" type="number" min="0"></label>
+            <label>Catatan Checkout<textarea id="checkoutNoteSetting"></textarea></label>
+            <button class="yellow-btn" type="submit">SIMPAN SETTINGS</button>
+          </form>
+          <div class="admin-note">Tempat integrasi payment gateway ada di file <b>script.js</b> pada bagian PAYMENT GATEWAY.</div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <footer>ORDERHUB AUTO ORDER SYSTEM • Responsive • Admin Ready • Gateway Ready</footer>
+  <script src="script.js"></script>
+</body>
+</html>
